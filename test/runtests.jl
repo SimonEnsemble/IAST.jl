@@ -9,7 +9,7 @@ using IAST, Test, LinearAlgebra
     K = [2.2, 5.6]
     aims = [LangmuirModel(M, K[i]) for i = 1:2]
     
-    for i = 1:25
+    for i = 1:100
         p = rand(2)
 
         a = iast(p, aims)

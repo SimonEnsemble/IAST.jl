@@ -4,10 +4,10 @@
 # - x: mol fractions in adsorbed phase
 # - p: partial pressures
 # - aim: adsorption isotherm models
-function Δπ!(Δπ::Vector{Float64},
-			 x::Vector{Float64}, 
-			 p::Vector{Float64},
-			 aim::Vector{<:AdsorptionIsothermModel})
+function Δπ!(Δπ, x, p, aim)
+			 #x::Vector{Float64}, 
+			 #p::Vector{Float64},
+			 #aim::Vector{<:AdsorptionIsothermModel})
 	n_c = length(x)
 	@assert length(Δπ) == n_c - 1
 	for c = 1:n_c-1
@@ -26,12 +26,15 @@ function iast(p::Vector{Float64}, aims::Vector{<:AdsorptionIsothermModel};
 	n_c = length(p) # number of components
     
     # guess adsorbed phase mol fraction
-    x_guess = [n(p[c], aims[c]) for c = 1:n_c]
+    # treat as competitive Langmuir
+    M̃ = mean([n(1000.0, aims[c]) for c = 1:n_c]) # high pressure loading
+    K̃ = [n(1e-4, aims[c]) / 1e-4 for c = 1:n_c] / M̃  # Henry / M = k
+    x_guess = [K̃[c] * p[c] / (1 + dot(K̃, p)) for c = 1:n_c]
 	x_guess /= sum(x_guess)
 
 	_Δπ!(Δπ::Vector{Float64}, x::Vector{Float64}) = Δπ!(Δπ, vcat(x, [1-sum(x)]), p, aims)
 
-	res = nlsolve(_Δπ!, x_guess[1:end-1])
+    res = nlsolve(_Δπ!, x_guess[1:end-1])#, autodiff=:forward)
 	@assert res.f_converged
 
 	x = vcat(res.zero, [1-sum(res.zero)])
