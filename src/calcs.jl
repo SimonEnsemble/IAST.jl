@@ -11,7 +11,7 @@ function Δπ!(Δπ, x, p, aim)
 	n_c = length(x)
 	@assert length(Δπ) == n_c - 1
 	for c = 1:n_c-1
-		Δπ[c] = π(p[c] / x[c], aim[c]) - π(p[c+1] / x[c+1], aim[c+1])
+		Δπ[c] = grand_pot(p[c] / x[c], aim[c]) - grand_pot(p[c+1] / x[c+1], aim[c+1])
 	end
 end
 
@@ -27,14 +27,15 @@ function iast(p::Vector{Float64}, aims::Vector{<:AdsorptionIsothermModel};
     
     # guess adsorbed phase mol fraction
     # treat as competitive Langmuir
-    M̃ = mean([n(1000.0, aims[c]) for c = 1:n_c]) # high pressure loading
-    K̃ = [n(1e-4, aims[c]) / 1e-4 for c = 1:n_c] / M̃  # Henry / M = k
+    M̃ = mean([loading(1000.0, aims[c]) for c = 1:n_c]) # high pressure loading
+    K̃ = [loading(1e-4, aims[c]) / 1e-4 for c = 1:n_c] / M̃  # Henry / M = k
     x_guess = [K̃[c] * p[c] / (1 + dot(K̃, p)) for c = 1:n_c]
 	x_guess /= sum(x_guess)
 
 	_Δπ!(Δπ::Vector{Float64}, x::Vector{Float64}) = Δπ!(Δπ, vcat(x, [1-sum(x)]), p, aims)
 
-    res = nlsolve(_Δπ!, x_guess[1:end-1])#, autodiff=:forward)
+    distance_to_0_or_1 = minimum([minimum(1.0 .- x_guess), minimum(x_guess)])
+    res = nlsolve(_Δπ!, x_guess[1:end-1], factor=distance_to_0_or_1)#, autodiff=:forward)
 	@assert res.f_converged
 
 	x = vcat(res.zero, [1-sum(res.zero)])
@@ -47,7 +48,7 @@ function iast(p::Vector{Float64}, aims::Vector{<:AdsorptionIsothermModel};
 		end
 	end
 
-	nₜ = 1.0 / sum(x[c] / n(p₀[c], aims[c]) for c = 1:n_c)
+	nₜ = 1.0 / sum(x[c] / loading(p₀[c], aims[c]) for c = 1:n_c)
 
 	return x * nₜ
 end
