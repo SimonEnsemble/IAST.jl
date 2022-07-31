@@ -3,8 +3,8 @@ the Temkin approx
 =#
 # params
 struct TemkinApproxModel<:AdsorptionIsothermModel
-	M::Real
-	K::Real
+    M::Real
+    K::Real
     θ::Real
 end
 TemkinApproxModel(;M::Real=NaN, K::Real=NaN, θ::Real=NaN) = TemkinApproxModel(M, K, θ)
@@ -22,9 +22,9 @@ function grand_pot(p, tm::TemkinApproxModel)
 end
 
 function _default_θ_guess(model::TemkinApproxModel,
-	                      data::DataFrame,
-	                      p_key::String,
-	                      l_key::String)
+                          data::DataFrame,
+                          p_key::String,
+                          l_key::String)
     lm_lang = _default_θ_guess(LangmuirModel(), data, p_key, l_key)
     return TemkinApproxModel(M=lm_lang.M, K=lm_lang.K, θ=0.0)
 end
