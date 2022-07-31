@@ -1,7 +1,7 @@
-function fit(data::DataFrame, 
-	         p_key::String, 
-	         l_key::String,
-	         model::AdsorptionIsothermModel)
+function identify_params(data::DataFrame, 
+                         p_key::String, 
+                         l_key::String,
+                         model::AdsorptionIsothermModel)
 	θ₀ = model_to_θ(model)
 	if any(isnan.(θ₀))
 		model_guess = _default_θ_guess(model, data, p_key, l_key)
