@@ -1,6 +1,12 @@
 push!(LOAD_PATH, joinpath(pwd(), "../src"))
 
-using IAST, Test, LinearAlgebra, DataFrames
+using IAST, Test, LinearAlgebra, DataFrames, CSV
+
+@testset "compare to mixed-gas sim tests" begin
+    data = Dict(gas => CSV.read("IRMOF-1_$(gas)_isotherm_298K.csv", DataFrame) 
+                    for gas in ["methane", "ethane"])
+    data_mix = CSV.read("IRMOF-1_methane_ethane_mixture_isotherm_65bar_298K.csv", DataFrame)
+end
 
 @testset "binary Langmuir tests" begin
     a_true(p, i, K, M) = M * K[i] * p[i] / (1 + dot(K, p))
@@ -24,7 +30,7 @@ end
 
 	θ₀ = IAST._default_θ_guess(LangmuirModel(), my_data, "p", "n")
 
-	res = fit(my_data, "p", "n", LangmuirModel(M=0.1, K=2.0))
+	res = identify_params(my_data, "p", "n", LangmuirModel(M=0.1, K=2.0))
 
 	@test isapprox(θ₀.K, 1.0, atol=0.01)
 	@test isapprox(θ₀.M, 3.0, atol=0.05)
