@@ -16,11 +16,27 @@ end
     aims = [LangmuirModel(M, K[i]) for i = 1:2]
     
     for i = 1:100
-        p = rand(2)
+        p = 0.0001 .+ rand(2)
 
         a = iast(p, aims)
         @test all([a_true(p, i, K, M) for i = 1:2] .≈ a)
     end
+end
+
+@testset "isotherm tests" begin
+    K = 1 + rand()
+    M = 1 + rand()
+
+    lm = LangmuirModel(K=K, M=M)
+    tm = TemkinApproxModel(K=K, M=M, θ=0.0)
+    qm = QuadraticModel(K=K, M=M/2, ϕ=1.0)
+
+    p = 1 + rand()
+
+    @test isapprox(loading(p, lm), loading(p, tm))
+    @test isapprox(loading(p, lm), loading(p, qm))
+    @test isapprox(grand_pot(p, lm), grand_pot(p, tm))
+    @test isapprox(grand_pot(p, lm), grand_pot(p, qm))
 end
 
 @testset "isotherm fit tests" begin
@@ -37,3 +53,4 @@ end
 	@test isapprox(res.K, 1.0, atol=0.01)
 	@test isapprox(res.M, 3.0, atol=0.01)
 end
+
