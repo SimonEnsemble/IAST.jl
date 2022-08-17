@@ -2,7 +2,7 @@
 the dual-site Langmuir adsorption isotherm model
 =#
 # params
-struct DualSiteLangmuirModel<:AdsorptionIsothermModel
+struct DualSiteLangmuirModel<:AdsIsoTModel
     M₁::Real
     K₁::Real
     M₂::Real
@@ -16,7 +16,7 @@ loading(p::Real, m::DualSiteLangmuirModel) = m.M₁ * m.K₁ * p / (1 + m.K₁ *
 # grand potential (::"spreading pressure") as a function of p
 grand_pot(p::Real, m::DualSiteLangmuirModel) = m.M₁ * log(1.0 + m.K₁ * p) + m.M₂ * log(1.0 + m.K₂ * p)
 
-function _default_θ_guess(ads_data::AdsorptionIsothermData, model::DualSiteLangmuirModel)
+function _default_θ_guess(ads_data::AdsIsoTData, model::DualSiteLangmuirModel)
     lm = _default_θ_guess(ads_data, LangmuirModel())
 
     return DualSiteLangmuirModel(K₁=lm.K * 2, M₁=lm.M / 2, K₂=lm.K / 2, M₂=lm.M / 2)

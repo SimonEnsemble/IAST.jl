@@ -2,7 +2,7 @@
 the quadratic isotherm model
 =#
 # params
-struct QuadraticModel<:AdsorptionIsothermModel
+struct QuadraticModel<:AdsIsoTModel
     M::Real
     K::Real
     ϕ::Real
@@ -20,10 +20,7 @@ function grand_pot(p::Real, qm::QuadraticModel)
     return qm.M * log(1 + 2 * qm.K * p + qm.ϕ * (qm.K * p)^2)
 end
 
-function _default_θ_guess(model::QuadraticModel,
-                          data::DataFrame,
-                          p_key::String,
-                          l_key::String)
-    lm = _default_θ_guess(LangmuirModel(), data, p_key, l_key)
+function _default_θ_guess(ads_data::AdsIsoTData, model::QuadraticModel)
+    lm = _default_θ_guess(ads_data, LangmuirModel())
     return QuadraticModel(M=lm.M / 2, K=lm.K, ϕ=1.0)
 end

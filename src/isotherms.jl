@@ -1,9 +1,9 @@
-abstract type AdsorptionIsothermModel
+abstract type AdsIsoTModel
 end
 
-Broadcast.broadcastable(m::AdsorptionIsothermModel) = (m,) # allow loading.(p, model)
+Broadcast.broadcastable(m::AdsIsoTModel) = (m,) # allow loading.(p, model)
 
-function model_to_θ(model::AdsorptionIsothermModel)
+function model_to_θ(model::AdsIsoTModel)
 	fields = fieldnames(typeof(model))
 	return [getfield(model, f) for f in fields]
 end

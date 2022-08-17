@@ -7,7 +7,7 @@
 function Δπ!(Δπ, x, p, aim)
 			 #x::Vector{Float64}, 
 			 #p::Vector{Float64},
-			 #aim::Vector{<:AdsorptionIsothermModel})
+			 #aim::Vector{<:AdsIsoTModel})
 	n_c = length(x)
 	@assert length(Δπ) == n_c - 1
 	for c = 1:n_c-1
@@ -21,7 +21,7 @@ end
 # - models: adsorption models
 # output:
 # - a: vector of loadings in adsorbed phase
-function iast(p::Vector{Float64}, models::Vector{<:AdsorptionIsothermModel};
+function iast(p::Vector{Float64}, models::Vector{<:AdsIsoTModel};
 	          p_warn::Array{Float64}=[Inf for _ = 1:length(p)])
 	n_c = length(p) # number of components
     
@@ -54,7 +54,7 @@ function iast(p::Vector{Float64}, models::Vector{<:AdsorptionIsothermModel};
 end
 
 function iast(partial_pressures::Dict{String, Float64},
-	          models::Dict{String, <:AdsorptionIsothermModel};
+	          models::Dict{String, <:AdsIsoTModel};
 			  p_warn::Dict{String, Float64}=Dict{String, Float64}())
     # unpack list of gases to use for ordering
     gases = [gas for gas in keys(partial_pressures)]

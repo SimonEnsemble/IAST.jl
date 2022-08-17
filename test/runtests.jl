@@ -47,7 +47,9 @@ end
     LangmuirModel()
 	my_data = DataFrame(p=range(0.0, 100.0, length=10000))
 	my_data[:, "n"] = 3 * my_data[:, "p"] ./ (1 .+ my_data[:, "p"])
-    ads_data = AdsorptionIsothermData(my_data, "p", "n")
+    ads_data = AdsIsoTData(my_data, "p", "n")
+
+    a_slice = ads_data[1:3]
 
     θ₀ = IAST._default_θ_guess(ads_data, LangmuirModel())
 

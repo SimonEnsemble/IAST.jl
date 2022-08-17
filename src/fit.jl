@@ -1,5 +1,4 @@
-function identify_params(ads_data::AdsorptionIsothermData,
-                         model::AdsorptionIsothermModel)
+function identify_params(ads_data::AdsIsoTData, model::AdsIsoTModel)
 	θ₀ = model_to_θ(model)
 	if any(isnan.(θ₀))
         model_guess = _default_θ_guess(ads_data, model)
