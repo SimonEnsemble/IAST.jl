@@ -18,6 +18,9 @@ struct AdsIsoTData
     end
 end
 
+loading(ads_data::AdsIsoTData) = ads_data.data[:, ads_data.l_key]
+pressures(ads_data::AdsIsoTData) = ads_data.data[:, ads_data.p_key]
+
 # slicing
 Base.getindex(d::AdsIsoTData, ids) = AdsIsoTData(d.data[ids, :], d.p_key, d.l_key)
 Base.length(d::AdsIsoTData) = nrow(d.data)
