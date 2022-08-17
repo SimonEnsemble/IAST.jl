@@ -1,10 +1,8 @@
-function identify_params(data::DataFrame, 
-                         p_key::String, 
-                         l_key::String,
+function identify_params(ads_data::AdsorptionIsothermData,
                          model::AdsorptionIsothermModel)
 	θ₀ = model_to_θ(model)
 	if any(isnan.(θ₀))
-		model_guess = _default_θ_guess(model, data, p_key, l_key)
+        model_guess = _default_θ_guess(ads_data, model)
 		θ₀ = model_to_θ(model_guess)
 	end
 	
@@ -14,9 +12,9 @@ function identify_params(data::DataFrame,
 		model = typeof(model)(θ...)
 		
 		loss = 0.0
-		for row in eachrow(data)
+		for row in eachrow(ads_data.data)
 			# unpack data point
-			pᵢ, nᵢ = row[p_key], row[l_key]
+			pᵢ, nᵢ = row[ads_data.p_key], row[ads_data.l_key]
 			
 			# predicted loading
 			n̂ᵢ = loading(pᵢ, model)
