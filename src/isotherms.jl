@@ -13,3 +13,5 @@ list of isotherm models
 =#
 include("models/langmuir.jl")
 include("models/temkin.jl")
+include("models/quadratic.jl")
+include("models/dual_site_langmuir.jl")

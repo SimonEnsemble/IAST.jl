@@ -30,23 +30,28 @@ end
     lm = LangmuirModel(K=K, M=M)
     tm = TemkinApproxModel(K=K, M=M, θ=0.0)
     qm = QuadraticModel(K=K, M=M/2, ϕ=1.0)
+    lm2 = LangmuirModel(K=K + rand(), M=M + rand())
+    dslm = DualSiteLangmuirModel(M₁=lm.M, K₁=lm.K, M₂=lm2.M, K₂=lm2.K)
 
     p = 1 + rand()
 
     @test isapprox(loading(p, lm), loading(p, tm))
+    @test isapprox(loading(p, lm) + loading(p, lm2), loading(p, dslm))
     @test isapprox(loading(p, lm), loading(p, qm))
     @test isapprox(grand_pot(p, lm), grand_pot(p, tm))
     @test isapprox(grand_pot(p, lm), grand_pot(p, qm))
+    @test isapprox(grand_pot(p, lm) + grand_pot(p, lm2), grand_pot(p, dslm))
 end
 
 @testset "isotherm fit tests" begin
     LangmuirModel()
 	my_data = DataFrame(p=range(0.0, 100.0, length=10000))
 	my_data[:, "n"] = 3 * my_data[:, "p"] ./ (1 .+ my_data[:, "p"])
+    ads_data = AdsorptionIsothermData(my_data, "p", "n")
 
-	θ₀ = IAST._default_θ_guess(LangmuirModel(), my_data, "p", "n")
+    θ₀ = IAST._default_θ_guess(ads_data, LangmuirModel())
 
-	res = identify_params(my_data, "p", "n", LangmuirModel(M=0.1, K=2.0))
+	res = identify_params(ads_data, LangmuirModel(M=0.1, K=2.0))
 
 	@test isapprox(θ₀.K, 1.0, atol=0.01)
 	@test isapprox(θ₀.M, 3.0, atol=0.05)
