@@ -25,3 +25,5 @@ function _default_θ_guess(ads_data::AdsIsoTData, model::TemkinApproxModel)
     lm_lang = _default_θ_guess(ads_data, LangmuirModel())
     return TemkinApproxModel(M=lm_lang.M, K=lm_lang.K, θ=0.0)
 end
+
+String(m::TemkinApproxModel) = "Tempkin approx. model"

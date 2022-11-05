@@ -30,8 +30,8 @@ p_warn = Dict(gas => maximum(data[gas][:, l_key]) for gas in gases)
 
 # ╔═╡ 3b72d972-b4da-480f-beff-2dc1e670f04e
 models = Dict(
-	"methane" => identify_params(data["methane"], p_key, l_key, LangmuirModel()),
-	"ethane"  => identify_params(data["ethane"], p_key, l_key, LangmuirModel())
+	"methane" => identify_params(data["methane"], p_key, l_key, QuadraticModel()),
+	"ethane"  => identify_params(data["ethane"], p_key, l_key, QuadraticModel())
 )
 
 # ╔═╡ ad050898-0d2f-4a6f-9c75-c4d093b16e04

@@ -8,9 +8,10 @@ include("calcs.jl")
 
 export AdsIsoTData, pressures, # data.jl
        # isotherms.jl
-       loading, grand_pot, AdsIsoTModel,
+       loading, grand_pot, AdsIsoTModel, model_list, nb_params,
        LangmuirModel, TemkinApproxModel, QuadraticModel, DualSiteLangmuirModel,
        # calcs.jl
        iast, 
        # fit.jl
        identify_params
+end

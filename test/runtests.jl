@@ -53,11 +53,11 @@ end
 
     θ₀ = IAST._default_θ_guess(ads_data, LangmuirModel())
 
-	res = identify_params(ads_data, LangmuirModel(M=0.1, K=2.0))
+	opt_model, min_loss = identify_params(ads_data, LangmuirModel(M=0.1, K=2.0))
 
 	@test isapprox(θ₀.K, 1.0, atol=0.01)
 	@test isapprox(θ₀.M, 3.0, atol=0.05)
-	@test isapprox(res.K, 1.0, atol=0.01)
-	@test isapprox(res.M, 3.0, atol=0.01)
+	@test isapprox(opt_model.K, 1.0, atol=0.01)
+	@test isapprox(opt_model.M, 3.0, atol=0.01)
 end
 

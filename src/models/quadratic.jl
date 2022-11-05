@@ -24,3 +24,5 @@ function _default_θ_guess(ads_data::AdsIsoTData, model::QuadraticModel)
     lm = _default_θ_guess(ads_data, LangmuirModel())
     return QuadraticModel(M=lm.M / 2, K=lm.K, ϕ=1.0)
 end
+
+String(m::QuadraticModel) = "quadratic model"

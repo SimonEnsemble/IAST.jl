@@ -24,3 +24,5 @@ function _default_θ_guess(ads_data::AdsIsoTData, model::LangmuirModel)
 
     return LangmuirModel(K=K, M=M)
 end
+
+String(m::LangmuirModel) = "Langmuir model"

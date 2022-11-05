@@ -21,3 +21,5 @@ function _default_θ_guess(ads_data::AdsIsoTData, model::DualSiteLangmuirModel)
 
     return DualSiteLangmuirModel(K₁=lm.K * 2, M₁=lm.M / 2, K₂=lm.K / 2, M₂=lm.M / 2)
 end
+
+String(m::DualSiteLangmuirModel) = "dual site Langmuir model"

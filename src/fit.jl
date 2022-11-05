@@ -27,6 +27,12 @@ function identify_params(ads_data::AdsIsoTData, model::AdsIsoTModel)
 	# minimize loss
 	res = optimize(ℓ, θ₀)
 
+    opt_model = 
+
 	# return model
-	return typeof(model)(res.minimizer...)
+    θ_opt = res.minimizer
+    opt_model = typeof(model)(θ_opt...)
+
+    min_loss = res.minimum / nrow(ads_data.data)
+    return opt_model, min_loss
 end
